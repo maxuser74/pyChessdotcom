@@ -39,3 +39,40 @@ for i in range(0, (len(games) - 1)):
 game = games[0]['pgn']
 print(game)
 
+#f = open("test.pgn", "w")
+#f.write(game)
+#f.close()
+
+def extract_post_link_text(text):
+    lines = text.split('\n')
+    
+    # Find the index of the line that contains "[Link"
+    link_index = -1
+    for i, line in enumerate(lines):
+        if "[Link" in line:
+            link_index = i
+            break
+    
+    if link_index == -1:
+        return "No [Link found in text."
+    
+    # Remove all lines up to and including the line with "[Link"
+    # Also check for the subsequent empty line and remove it if present
+    post_link_lines = lines[link_index + 1:]
+    if post_link_lines and post_link_lines[0].strip() == '':
+        post_link_lines = post_link_lines[1:]
+    
+    # Rejoin the remaining text
+    remaining_text = '\n'.join(post_link_lines)
+    
+    # Find the position of the substring "1." in the remaining text
+    one_index = remaining_text.find("1.")
+    if one_index == -1:
+        return "Substring '1.' not found in the text after [Link."
+    
+    # Return the text starting from "1."
+    return remaining_text[one_index:]
+
+print(extract_post_link_text(game))
+
+      
