@@ -134,7 +134,46 @@ def extract_move_times(pgn, gameplay_start_time):
     return df
 
 pgn_text = extract_pgn_text(game)
-print(pgn_text)
+#print(pgn_text)
 
-print(extract_move_times(pgn_text,'0:10:00'))
+result_df = extract_move_times(pgn_text,'0:10:00')
+
+def calculate_average_times(df):
+    import pandas as pd
+
+    # Convert differences back to float for calculations
+    df['White diff'] = df['White diff'].astype(float)
+    df['Black diff'] = df['Black diff'].astype(float)
+    
+    # Define opening and middlegame based on move numbers
+    opening_end = 12
+    middlegame_start = 13
+    
+    # Calculate average times for opening (first 12 moves)
+    if len(df) >= opening_end:
+        opening_avg_white = df.loc[1:opening_end, 'White diff'].mean()
+        opening_avg_black = df.loc[1:opening_end, 'Black diff'].mean()
+    else:
+        opening_avg_white = df['White diff'].mean()  # If less than 12 moves in total
+        opening_avg_black = df['Black diff'].mean()
+
+    # Calculate average times for middlegame (from move 13 to end)
+    if len(df) >= middlegame_start:
+        middlegame_avg_white = df.loc[middlegame_start:, 'White diff'].mean()
+        middlegame_avg_black = df.loc[middlegame_start:, 'Black diff'].mean()
+    else:
+        middlegame_avg_white = None  # No middlegame moves if less than 13 moves
+        middlegame_avg_black = None
+
+    # Return a DataFrame with the results
+    avg_times_df = pd.DataFrame({
+        'Phase': ['Opening', 'Middlegame'],
+        'Average White Time (s)': [opening_avg_white, middlegame_avg_white],
+        'Average Black Time (s)': [opening_avg_black, middlegame_avg_black]
+    })
+
+    return avg_times_df
+
+print(calculate_average_times(result_df))
+
 
