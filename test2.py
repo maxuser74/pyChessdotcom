@@ -10,7 +10,7 @@ Client.request_config["headers"]["User-Agent"] = (
    "Contact me at email@example.com"
 )
 
-games_data = str(get_player_games_by_month_pgn('macspacs', '2024', '04').json['pgn']['pgn'])
+games_data = str(get_player_games_by_month_pgn('macspacs', '2024', '05').json['pgn']['pgn'])
 
 def format_time(seconds):
     """Helper function to convert seconds into MM:SS format."""
