@@ -40,6 +40,7 @@ for i in range(0, (len(games) - 1)):
 
 game = games[0]['pgn']
 #print(game)
+#print(games)
 
 #f = open("test.pgn", "w")
 #f.write(game)
@@ -174,6 +175,46 @@ def calculate_average_times(df):
 
     return avg_times_df
 
-print(calculate_average_times(result_df))
+def create_games_dataframe(pgn_texts):
+    # Define a list to store game data
+    games_data = []
+
+    # Define the regex patterns for extracting data from PGN text
+    game_info_pattern = re.compile(r"""
+        \[Date\s+"(?P<Date>\d{4}\.\d{2}\.\d{2})"\]
+        .*\[White\s+"(?P<White>[^"]+)"\]
+        .*\[Black\s+"(?P<Black>[^"]+)"\]
+        .*\[Result\s+"(?P<Result>[^"]+)"\]
+        .*\[UTCDate\s+"(?P<UTCDate>\d{4}\.\d{2}\.\d{2})"\]
+        .*\[UTCTime\s+"(?P<UTCTime>\d{2}:\d{2}:\d{2})"\]
+        .*\[WhiteElo\s+"(?P<WhiteElo>\d+)"\]
+        .*\[BlackElo\s+"(?P<BlackElo>\d+)"\]
+        .*\[TimeControl\s+"(?P<TimeControl>\d+)"\]
+        .*\[Termination\s+"(?P<Termination>[^"]+)"\]
+        """, re.DOTALL | re.VERBOSE)
+
+    # Loop through each PGN text to extract game information
+    for pgn in pgn_texts:
+        match = game_info_pattern.search(pgn)
+        if match:
+            game_info = match.groupdict()
+            game_info['TimeControl'] = int(game_info['TimeControl'])  # Convert to int
+            game_info['WhiteElo'] = int(game_info['WhiteElo'])  # Convert to int
+            game_info['BlackElo'] = int(game_info['BlackElo'])  # Convert to int
+            game_info['Winner'] = 'Draw' if game_info['Result'] == '1/2-1/2' else (
+                game_info['White'] if game_info['Result'] == '1-0' else game_info['Black'])
+            games_data.append(game_info)
+
+    # Create a DataFrame from the collected game information
+    df = pd.DataFrame(games_data)
+    return df
+
+#print(calculate_average_times(result_df))
+
+test = get_player_games_by_month_pgn('macspacs', '2024', '04')
+
+test2 = str(test.json['pgn']['pgn'])
+
+print(create_games_dataframe(test2))
 
 
