@@ -2,6 +2,8 @@ from chessdotcom import (
                          Client,
                          get_player_games_by_month_pgn)
 
+from tabulate import tabulate
+
 import re
 import pandas as pd
 
