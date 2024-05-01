@@ -1,21 +1,24 @@
 Create a python function that accepts "specified_player" (text) and 
-"opening_moves" (int number), pgn_txt (text containing multiple chess pgns) 
+"opening_moves" (int number), "pgn_txt" (text containing multiple chess pgns) 
 as variables.
-The function must extract and put into Pandas dataframe from pgn_txt datas such as:
+The function must extract and put into Pandas dataframe for each pgn in 
+pgn_txt datas such as:
 - datetime of the game (in ascending order)
 - game type (use 'TimeControl' which is expressed in seconds and transform
 it in "h:mm:ss" notation)
 - specified_player elo
-- other opponent elo (indicate only 'opponent' and not the full name)
-- final result for specified_player
-- remaining time for specified_player (in mm:ss notation) at the end of the game
- - average move time in the opening for specified_player (first opening_moves
-number) and middle/end game only for specified_player
+- other opponent elo (indicates only 'opponent' and not the full name)
+- elo difference between specified_player and other opponent
+- specified_player final result
+- specified_player remaining time (in mm:ss notation) at the end of the game
+ - specified_player average move time in the opening phase (first n opening_moves
+number) and middle/end game
 -  "Termination" tag text
 - opening as part of the text in "ECOUrl" tag after the "openings/" subtext
 put all the datas in a pandas dataframe.
 - final result as match from a list of provided results with "Termination" tag
-The provided results list is: resignation, checkmate, game abandoned, on time, stalemate
+The possible results list is: resignation, checkmate, game abandoned, on time, stalemate
+- number of full chess moves
 
 The example text containing all the pgns is the following:
 
